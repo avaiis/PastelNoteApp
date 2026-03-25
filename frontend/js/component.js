@@ -10,7 +10,7 @@ export const CATEGORY_COLORS = {
 };
 
 export function getCategoryColor(category) {
-  return CATEGORY_COLORS[category] || { bg: '#F3F4F6', border: '#d1d5db' };
+  return CATEGORY_COLORS[category] || { bg: '#d8dce6', border: '#d1d5db' };
 }
 
 // Popup System

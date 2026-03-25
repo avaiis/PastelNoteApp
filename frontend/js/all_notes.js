@@ -102,7 +102,7 @@ function createNoteCard(note) {
     // Jika user klik tombol favorit, jangan buka modal baca
     if (e.target.closest('.btn-fav')) return;
     
-    console.log("Mencoba membuka modal untuk:", note.title);
+    console.log("Try to open modal for:", note.title);
     openReadModal(note);
   };
 
@@ -232,7 +232,7 @@ function openModal(note) {
     : 'text-[10px] px-2 py-0.5 rounded-full font-medium bg-blue-100 text-blue-600';
   document.getElementById('inputTitle').value          = note?.title    ?? '';
   document.getElementById('inputContent').value        = note?.content  ?? '';
-  document.getElementById('inputCategory').value       = note?.category ?? 'College';
+  document.getElementById('inputCategory').value       = note?.category ?? 'Other';
   document.getElementById('modalError').classList.add('hidden');
 
   renderMoodPicker(selectedMood);

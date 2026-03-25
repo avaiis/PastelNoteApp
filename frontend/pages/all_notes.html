@@ -103,16 +103,21 @@
           <textarea id="inputContent" rows="4" placeholder="Write your notes here..."
             class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition resize-none"></textarea>
         </div>
-        <div>
-          <label class="block text-xs font-medium text-gray-600 mb-1">Category</label>
+        <div class="relative">
           <select id="inputCategory"
-            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition bg-white">
+            class="w-full appearance-none border border-gray-200 rounded-xl pl-4 pr-10 py-2.5 text-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition bg-white cursor-pointer">
             <option value="College">College</option>
             <option value="Work">Work</option>
             <option value="Personal">Personal</option>
             <option value="Idea">Idea</option>
-            <option value="Other">Other</option>
+            <option value="Other" selected>Other</option>
           </select>
+          
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-800">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
         </div>
         <p id="modalError" class="text-red-500 text-xs hidden">The title field must be filled in.</p>
       </div>
