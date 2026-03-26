@@ -1,10 +1,13 @@
 const mysql = require('mysql2');
+require('dotenv').config();
 
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'pastelnote_db'
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASS || '',
+    database: process.env.DB_NAME || 'pastelnote_db',
+    connectTimeout: 10000,
+    enableKeepAlive: true
 });
 
 db.connect((err) => {
