@@ -10,6 +10,14 @@ exports.getNotesByUser = (req, res) => {
 
 exports.createNote = (req, res) => {
     const { user_id, title, content, category, mood } = req.body;
+
+    // Validasi title tidak boleh kosong
+    if (!title || title.trim() === "") {
+        return res.status(400).json({ 
+            message: "Column 'title' cannot be null"
+        });
+    }
+
     Note.create({ user_id, title, content, category, mood }, (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
         res.status(201).json({ message: "Note added successfully", note_id: result.insertId });
@@ -19,6 +27,11 @@ exports.createNote = (req, res) => {
 exports.updateNote = (req, res) => {
     const noteId = req.params.note_id;
     const { user_id, title, content, category, mood, is_favorite, is_archive, is_delete } = req.body;
+
+     // Validasi title tidak boleh kosong
+    if (title !== undefined && title.trim() === "") {
+        return res.status(400).json({ message: "Column 'title' cannot be null" });
+    }
 
     const fields = { user_id };
 

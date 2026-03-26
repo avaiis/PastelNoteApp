@@ -1,5 +1,5 @@
 import { requireLogin } from './auth.js';
-import { renderSidebar, renderTopbar, getCategoryColor, showConfirm } from './component.js';
+import { renderSidebar, renderTopbar, getCategoryColor, showConfirm, showAlert } from './component.js';
 import { getNotes, toggleFavorite, trashNote } from './api.js';
 
 const user        = requireLogin();
@@ -92,17 +92,44 @@ function createNoteCard(note) {
 
   card.querySelector('.btn-unfav').addEventListener('click', e => {
     e.stopPropagation();
-    showConfirm({ icon: '💔', title: 'Remove from favorites?', message: `"${note.title}" will be removed from favorites.`,
-      confirmText: 'Remove', confirmClass: 'bg-red-500 hover:bg-red-600',
-      onConfirm: async () => { await toggleFavorite(note.note_id, user.user_id, 0); loadNotes(); }
+    showConfirm({ 
+      icon: '💔', 
+      title: 'Remove from favorites?', 
+      message: `"${note.title}" will be removed from favorites.`,
+      confirmText: 'Remove', 
+      confirmClass: 'bg-red-500 hover:bg-red-600',
+      onConfirm: async () => { 
+        try{
+          await toggleFavorite(note.note_id, user.user_id, 0); 
+          loadNotes();
+          showAlert({ icon: '✅', title: 'Unfavorite', message: 'Successfully removed from favorites!' });
+        }catch (err){
+          showAlert({ icon: '❌', title: 'Error', message: err.message });
+        }
+         
+      }
     });
   });
 
   card.querySelector('.btn-trash').addEventListener('click', e => {
     e.stopPropagation();
-    showConfirm({ icon: '🗑️', title: 'Delete note?', message: `"${note.title}" will be moved to the trash.`,
-      confirmText: 'Delete', confirmClass: 'bg-red-500 hover:bg-red-600',
-      onConfirm: async () => { await trashNote(note.note_id, user.user_id); loadNotes(); }
+    showConfirm({ 
+      icon: '🗑️', 
+      title: 'Delete note?', 
+      message: `"${note.title}" will be moved to the trash.`,
+      confirmText: 'Delete', 
+      confirmClass: 'bg-red-500 hover:bg-red-600',
+      onConfirm: async () => { 
+        try{
+          await trashNote(note.note_id, user.user_id); 
+          loadNotes();
+          showAlert({ icon: '✅', title: 'Deleted', message: 'Note moved to trash!' });
+        }catch(err){
+          showAlert({ icon: '❌', title: 'Error', message: err.message });
+
+        }
+         
+      }
     });
   });
 

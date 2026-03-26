@@ -129,20 +129,42 @@ function createNoteCard(note) {
   card.querySelector('.btn-archive').onclick = (e) => {
     e.stopPropagation();
     showConfirm({
-      icon: '📦', title: 'Archive note?',
+      icon: '📦', 
+      title: 'Archive note?',
       message: `"${note.title}" will be moved to the archive.`,
-      confirmText: 'Archive', confirmClass: 'bg-[#9277C0] hover:bg-[#8165AE]',
-      onConfirm: async () => { await archiveNote(note.note_id, user.user_id); loadNotes(); }
+      confirmText: 'Archive', 
+      confirmClass: 'bg-[#9277C0] hover:bg-[#8165AE]',
+      onConfirm: async () => { 
+        try{
+          
+          await archiveNote(note.note_id, user.user_id); 
+          loadNotes(); 
+          showAlert({ icon: '✅', title: 'Archived', message: 'Note archived successfully!' });
+        }catch(err){
+          showAlert({ icon: '❌', title: 'Error', message: err.message });
+        }
+      }
+        
     });
   };
 
   card.querySelector('.btn-trash').onclick = (e) => {
     e.stopPropagation();
     showConfirm({
-      icon: '🗑️', title: 'Delete note?',
+      icon: '🗑️', 
+      title: 'Delete note?',
       message: `"${note.title}" will be moved to the trash.`,
-      confirmText: 'Delete', confirmClass: 'bg-red-500 hover:bg-red-600',
-      onConfirm: async () => { await trashNote(note.note_id, user.user_id); loadNotes(); }
+      confirmText: 'Delete', 
+      confirmClass: 'bg-red-500 hover:bg-red-600',
+      onConfirm: async () => { 
+        try{
+          const result = await trashNote(note.note_id, user.user_id); 
+          loadNotes();
+          showAlert({ icon: '✅', title: 'Deleted', message: 'Note moved to trash!' });
+        }catch(err){
+          showAlert({ icon: '❌', title: 'Error', message: err.message });
+        } 
+      }
     });
   };
 
@@ -278,8 +300,10 @@ document.getElementById('btnSaveModal').addEventListener('click', async () => {
   try {
     if (editingId) {
       await updateNote(editingId, user.user_id, { title, content, category, mood: selectedMood });
+      showAlert({ icon: '✅', title: 'Updated', message: 'Note updated successfully!' });
     } else {
       await createNote({ user_id: user.user_id, title, content, category, mood: selectedMood });
+      showAlert({ icon: '✅', title: 'Created', message: 'Note added successfully!' });
     }
     closeModal();
     loadNotes();

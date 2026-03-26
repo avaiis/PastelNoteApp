@@ -92,24 +92,49 @@ function createNoteCard(note) {
 
   card.querySelector('.btn-unarchive').addEventListener('click', e => {
     e.stopPropagation();
-    showConfirm({ icon: '📤', title: 'Unarchive note?', message: `"${note.title}" will be moved back to All Notes.`,
-      confirmText: 'Unarchive', confirmClass: 'bg-[#9277C0] hover:bg-[#8165AE]',
-      onConfirm: async () => { await restoreNote(note.note_id, user.user_id); loadNotes(); }
+    showConfirm({ 
+      icon: '📤', 
+      title: 'Unarchive note?', 
+      message: `"${note.title}" will be moved back to All Notes.`,
+      confirmText: 'Unarchive', 
+      confirmClass: 'bg-[#9277C0] hover:bg-[#8165AE]',
+      onConfirm: async () => { 
+        try{
+          await restoreNote(note.note_id, user.user_id); 
+          loadNotes();
+          showAlert({ icon: '✅', title: 'Unarchived', message: 'Note succesfully unarchived!'});
+        }catch(err){
+          showAlert({ icon: '❌', title: 'Failed to unarchived', message: err.message });
+        }   
+      }
     });
   });
 
   card.querySelector('.btn-trash').addEventListener('click', e => {
     e.stopPropagation();
-    showConfirm({ icon: '🗑️', title: 'Delete note?', message: `"${note.title}" will be moved to the trash.`,
-      confirmText: 'Delete', confirmClass: 'bg-red-500 hover:bg-red-600',
-      onConfirm: async () => { await trashNote(note.note_id, user.user_id); loadNotes(); }
+    showConfirm({ 
+      icon: '🗑️', 
+      title: 'Delete note?', 
+      message: `"${note.title}" will be moved to the trash.`,
+      confirmText: 'Delete', 
+      confirmClass: 'bg-red-500 hover:bg-red-600',
+      onConfirm: async () => { 
+        try{
+          await trashNote(note.note_id, user.user_id); 
+          loadNotes();
+          showAlert({ icon: '✅', title: 'Deleted', message: 'Note moved to trash!' });
+        }catch(err){
+          showAlert({ icon: '❌', title: 'Error', message: err.message });
+        }
+        
+      }
     });
   });
 
   return card;
 }
 
-// Modal edit (khusus archive, tanpa create)
+// Modal edit
 const MOODS      = ['😍','😭','🤣','😪','😱'];
 let selectedMood = null;
 
@@ -154,10 +179,14 @@ document.getElementById('btnSaveModal').addEventListener('click', async () => {
   const title    = document.getElementById('inputTitle').value.trim();
   const content  = document.getElementById('inputContent').value.trim();
   const category = document.getElementById('inputCategory').value;
+
   if (!title) { document.getElementById('modalError').classList.remove('hidden'); return; }
+
   try {
     await updateNote(editingId, user.user_id, { title, content, category, mood: selectedMood });
-    closeModal(); loadNotes();
+    closeModal(); 
+    loadNotes();
+    showAlert({ icon: '✅', title: 'Updated', message: 'Note updated successfully!' });
   } catch (err) {
     showAlert({ icon: '❌', title: 'Failed to save', message: err.message });
   }

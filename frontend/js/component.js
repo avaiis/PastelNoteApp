@@ -203,10 +203,19 @@ export function renderTopbar(pageTitle) {
 
   document.getElementById('logoutBtn').addEventListener('click', () => {
     showConfirm({
-      icon: '👋', title: 'Logout?',
+      icon: '👋', 
+      title: 'Logout?',
       message: 'You will be signed out of Pastel Note.',
-      confirmText: 'Logout', confirmClass: 'bg-red-500 hover:bg-red-600',
-      onConfirm: logout,
+      confirmText: 'Logout', 
+      confirmClass: 'bg-red-500 hover:bg-red-600',
+      onConfirm: () => {
+        showAlert({ icon: '✅', title: 'Success', message: 'You have logged out successfully!',
+          onClose: () => {
+            // Panggil fungsi logout yang isinya hapus storage & redirect
+            logout(); 
+          }
+        });
+      },
     });
   });
 

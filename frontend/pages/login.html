@@ -84,6 +84,22 @@
     <img src="../assets/login.png" alt="Login Illustration" class="w-3/4 h-auto object-contain drop-shadow-xl"/>
   </div>
 
+  <!-- Success overlay -->
+  <div id="successOverlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-2xl p-8 shadow-2xl text-center max-w-sm mx-4">
+      <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-gray-900 mb-2">Login Successful!</h2>
+      <p class="text-gray-500 text-sm">Welcome back! Preparing your dashboard...</p>
+      <div class="w-full bg-gray-100 rounded-full h-1.5 mt-4">
+        <div id="progressBar" class="bg-[#9277C0] h-1.5 rounded-full w-0 transition-all duration-[2000ms]"></div>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { login } from '../js/api.js';
     import { saveUser } from '../js/auth.js';
@@ -130,19 +146,21 @@
     if (!isFormValid) return;
 
     try {
-      const result = await login(usernameInput.value.trim(), passwordInput.value);
+      const result = await login(
+        usernameInput.value.trim(), 
+        passwordInput.value);
 
-      console.log("Data dari backend:", result);
+      console.log("Data from backend:", result);
 
       if (result && result.user) {
         localStorage.setItem('user', JSON.stringify(result.user));
 
         // Jalankan animasi sukses atau langsung pindah halaman
         document.getElementById('successOverlay')?.classList.remove('hidden');
-        
+        setTimeout(() => document.getElementById('progressBar').style.width = '100%', 50);
         setTimeout(() => {
           window.location.href = 'all_notes.html';
-        }, 100);
+        }, 2700);
       } else {
         alert("User data was not found in the response.");
       }

@@ -85,20 +85,38 @@ function createNoteCard(note) {
 
   card.querySelector('.btn-restore').addEventListener('click', e => {
     e.stopPropagation();
-    showConfirm({ icon: '♻️', title: 'Restore note?', message: `"${note.title}" will be moved back to All Notes.`,
-      confirmText: 'Restore', confirmClass: 'bg-[#9277C0] hover:bg-[#8165AE]',
-      onConfirm: async () => { await restoreNote(note.note_id, user.user_id); loadNotes(); }
+    showConfirm({ 
+      icon: '♻️', 
+      title: 'Restore note?', 
+      message: `"${note.title}" will be moved back to All Notes.`,
+      confirmText: 'Restore', 
+      confirmClass: 'bg-[#9277C0] hover:bg-[#8165AE]',
+      onConfirm: async () => { 
+        try{
+          await restoreNote(note.note_id, user.user_id); 
+          loadNotes(); 
+          showAlert({ icon: '✅', title: 'Restored', message: 'Note restored successfully!' });
+        } catch (err){
+          showAlert({ icon: '❌', title: 'Error', message: err.message });
+        }
+        
+      }
     });
   });
 
   card.querySelector('.btn-delete').addEventListener('click', e => {
     e.stopPropagation();
-    showConfirm({ icon: '💀', title: 'Permanently delete?', message: `"${note.title}" will be permanently deleted and cannot be recovered.`,
-      confirmText: 'Delete', confirmClass: 'bg-red-600 hover:bg-red-700',
+    showConfirm({ 
+      icon: '💀', 
+      title: 'Permanently delete?', 
+      message: `"${note.title}" will be permanently deleted and cannot be recovered.`,
+      confirmText: 'Delete', 
+      confirmClass: 'bg-red-600 hover:bg-red-700',
       onConfirm: async () => {
         try {
           await deleteNote(note.note_id, user.user_id);
           loadNotes();
+          showAlert({ icon: '✅', title: 'Deleted', message: 'Note permanently deleted!' });
         } catch(err) {
           showAlert({ icon: '❌', title: 'Failed to delete', message: err.message });
         }
